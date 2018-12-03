@@ -41,9 +41,9 @@ fn parse_ingredients(contents: String) -> Vec<Ingredient> {
         name: String::from("Hi"), capacity: 2, durability: 2, flavor: 2, texture: 2, calories: 2
     };
     let lines = contents.lines();
-    // for element in lines {
-    //     println!("raw line: {}", element);
-    // }
+    for element in lines.clone() {
+        println!("raw line: {}", element);
+    }
     let ings: Vec<Ingredient> = lines
         .map(|line| parse_ingredient(line.to_string()))
         .collect();
