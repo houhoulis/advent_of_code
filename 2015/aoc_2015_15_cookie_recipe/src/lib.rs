@@ -14,13 +14,13 @@ pub fn main() -> Vec<String> {
 
 use std::fs;
 
-pub fn make_cookies(filename : String) -> i32 {
+pub fn make_cookies(filename: String) -> i32 {
     let contents = read_file(filename);
     let ings = parse_ingredients(contents);
     3
 }
 
-fn read_file(filename : String) -> String {
+fn read_file(filename: String) -> String {
     println!("In file {}", filename);
 
     let contents = fs::read_to_string(filename)
@@ -36,7 +36,7 @@ struct Ingredient {
     capacity: i32, durability: i32, flavor: i32, texture: i32, calories: i32
 }
 
-fn parse_ingredients(contents : String) -> Vec<Ingredient> {
+fn parse_ingredients(contents: String) -> Vec<Ingredient> {
     let ing = Ingredient {
         name: String::from("Hi"), capacity: 2, durability: 2, flavor: 2, texture: 2, calories: 2
     };
@@ -44,14 +44,15 @@ fn parse_ingredients(contents : String) -> Vec<Ingredient> {
     // for element in lines {
     //     println!("raw line: {}", element);
     // }
-    let ings : Vec<Ingredient> = lines.map(|line| parse_ingredient(line.to_string()) )
-                    .collect();
+    let ings: Vec<Ingredient> = lines
+        .map(|line| parse_ingredient(line.to_string()))
+        .collect();
     println!("hi {:#?}", ings);
     ings
 }
 
-fn parse_ingredient(text : String) -> Ingredient {
-    let words : Vec<&str> = text.split_whitespace().collect();
+fn parse_ingredient(text: String) -> Ingredient {
+    let words: Vec<&str> = text.split_whitespace().collect();
 
     let name = words[0].trim_end_matches(":").to_string();
     let capacity = words[2].trim_end_matches(",").parse::<i32>().unwrap();
