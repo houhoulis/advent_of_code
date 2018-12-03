@@ -4,26 +4,17 @@ extern crate aoc_2015_15_cookie_recipe;
 // mod tests {
     use aoc_2015_15_cookie_recipe::*;
 
-    // #[test]
-    // fn it_works() {
-    //     let result = foobar();
-    //     assert_eq!(result, 4 + 2);
-    // }
+#[test]
+fn test_make_cookies_input0() {
+    let result = make_cookies(String::from("src/input0.txt"));
+    assert_eq!(result, 62842880);
+}
 
-    // #[test]
-    // fn whatevs() {
-    //     let result = main();
-    //     println!("{:?}", result);
-    //     assert_eq!(2, 2);
-    // }
-
-    #[test]
-    fn test_make_cookies() {
-        // let fred : i32 = "1,".parse().unwrap();
-        let result = make_cookies(String::from("src/input0.txt"));
-        assert!(result > 1);
-    }
-// }
+#[test]
+fn test_make_cookies_input1() {
+    let result = make_cookies(String::from("src/input1.txt"));
+    assert_eq!(result, 13882464);
+}
 
 #[test]
 fn test_stdlib() {
