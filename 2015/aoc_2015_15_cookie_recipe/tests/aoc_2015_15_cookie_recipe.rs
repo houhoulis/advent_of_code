@@ -1,8 +1,6 @@
 extern crate aoc_2015_15_cookie_recipe;
 
-// #[cfg(test)]
-// mod tests {
-    use aoc_2015_15_cookie_recipe::*;
+use aoc_2015_15_cookie_recipe::*;
 
 #[test]
 fn test_make_cookies_input0() {

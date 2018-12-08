@@ -16,15 +16,15 @@ impl Recipe {
         self.ingredients.len()
     }
 
-    fn score_with_multipliers(&self, multipliers: Vec<i64>) -> i64 {
+    fn score_with_multipliers(&self, multipliers: &Vec<i64>) -> i64 {
         if self.len() != multipliers.len() {
             panic!("Ouchie!");
         };
-        let ing_with_multipliers: Vec<(&Ingredient, i64)> = self.ingredients.iter().zip(multipliers).collect();
-        let cap: i64 = ing_with_multipliers.iter().map(|(ing, mult)| mult * ing.capacity).sum();
-        let dur: i64 = ing_with_multipliers.iter().map(|(ing, mult)| mult * ing.durability).sum();
-        let fla: i64 = ing_with_multipliers.iter().map(|(ing, mult)| mult * ing.flavor).sum();
-        let tex: i64 = ing_with_multipliers.iter().map(|(ing, mult)| mult * ing.texture).sum();
+        let ing_with_multipliers: Vec<(&Ingredient, &i64)> = self.ingredients.iter().zip(multipliers).collect();
+        let cap: i64 = ing_with_multipliers.iter().map(|(ing, &mult)| mult * ing.capacity).sum();
+        let dur: i64 = ing_with_multipliers.iter().map(|(ing, &mult)| mult * ing.durability).sum();
+        let fla: i64 = ing_with_multipliers.iter().map(|(ing, &mult)| mult * ing.flavor).sum();
+        let tex: i64 = ing_with_multipliers.iter().map(|(ing, &mult)| mult * ing.texture).sum();
         if cap < 0 || dur < 0 || fla < 0 || tex < 0 {
             return 0;
         };
@@ -69,30 +69,28 @@ fn parse_ingredient(text: String) -> Ingredient {
 }
 
 fn find_high_score(recipe: Recipe) -> i64 {
-    if recipe.len() == 2 {
-        find_high_score_2(recipe)
+    find_high_score_rec(&recipe, &mut vec![])
+}
+
+fn find_high_score_rec(recipe: &Recipe, multipliers: &mut Vec<i64>) -> i64 {
+    let new_vec = |vec: &Vec<i64>, elt: i64| {
+        let mut a_new_vec = vec.clone();
+        a_new_vec.push(elt);
+        a_new_vec
+    };
+    let count = multipliers.len();
+    let recipe_length = recipe.len();
+    if count >= recipe_length {
+        panic!("I miscounted the number of ingredients!!");
+    } else if count == recipe_length - 1 {
+        let total: i64 = multipliers.iter().sum();
+        multipliers.push(100 - total);
+        recipe.score_with_multipliers(multipliers)
     } else {
-        find_high_score_4(recipe)
+        let total: i64 = multipliers.iter().sum();
+        (0..=(100 - total)).map(|i|
+            find_high_score_rec(recipe, &mut new_vec(multipliers, i))
+        ).max().expect("Out of bounds or empty?")
     }
 }
 
-fn find_high_score_2(recipe: Recipe) -> i64 {
-    (0..100).map(|i|
-        recipe.score_with_multipliers(vec![i, 100 - i])
-    ).max().expect("No max score?!")
-}
-
-fn find_high_score_4(recipe: Recipe) -> i64 {
-    let mut scores: Vec<i64> = Vec::new();
-    for i in 0..=100 {
-        for j in 0..=(100 - i) {
-            for k in 0..=(100 - i - j) {
-                let l = 100 - i - j - k;
-                scores.push(recipe.score_with_multipliers(vec![i, j, k, l]))
-            }
-        }
-    };
-    println!("Better be better than 25s all around! ({})", recipe.score_with_multipliers(vec![25, 25, 25, 25]));
-
-    scores.into_iter().max().expect("Wowzers! No/bad scores for max()??!")
-}
